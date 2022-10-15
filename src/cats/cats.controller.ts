@@ -3,26 +3,11 @@
  * 
  */
 
-import { Controller, Get, Req, Post, HttpCode, Header, Body } from '@nestjs/common'
+import { Controller, Get, Req, Post, HttpCode, Header, Body, HttpException, HttpStatus } from '@nestjs/common'
 import { Request } from 'express'
 import { CatsService } from './cats.service';
 import { Cat } from './interfaces/cat.interface';
-
-/**
- * @Body() decorator를 사용하여 POST route handler에 값을 전달해보자.
- * 
- * DTO(Data Transfer Object) schema가 필요하다. 
- * DTO는 data가 어떻게 network를 통해서 전달될지를 정의하는 object이다. 
- * Typescript interface나 class를 사용하여 DTO schema를 만들 수 있다.
- * 재미있게도 class를 사용할것을 권장한다. 
- * 왜냐하면 Class는 ES6 standard의 일부여서 compiled Javascript에서도 그 존재가 보존되지만,
- * Typescript interface는 transpilation 과정에서 사라지기 때문이다.
- */
-export class CreateCatDto {
-    name: string;
-    age: number;
-    breed: string;
-}
+import { CreateCatDto } from './dto/create-cat.dto'
 
 // basic controller를 정의하기 위해서는 @Controller() decorator가 필요하다.
 // Optional route path prefix `cats`를 설정했다.
@@ -96,6 +81,7 @@ export class CatsController {
      * 이것을 직접 수동으로 가져오는 것은 불필요하다. 대신 `@Body()`나 `@Query()`와 같은 decorator를 사용한다.
      */
     async findAll(@Req() request: Request): Promise<Cat[]> {
+        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN)
         // return 'This action returns all cats'
         return this.catsService.findAll()
     }
